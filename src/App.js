@@ -1,23 +1,70 @@
-import logo from './logo.svg';
-import './App.css';
+/* eslint-disable */
 
-function App() {
+import { useState } from "react";
+import { Navbar, Nav, NavDropdown, Button } from "react-bootstrap";
+import "./App.css";
+import Data from './data.js'
+import Card from "./Card";
+
+import { Link, Route, Switch } from 'react-router-dom'
+import Detail from "./Detail";
+
+function App(e) {
+
+  let [shrit, setShrit] = useState(Data);
+
   return (
+   
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
+   
+      <Navbar bg="light" expand="lg">
+        <Navbar.Brand href="#home">여성의류 쇼핑몰</Navbar.Brand>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="me-auto">
+            <Nav.Link as={Link}  to="/">Home</Nav.Link>
+            <Nav.Link as={Link} to="/detail">상세페이지</Nav.Link>
+            <NavDropdown title="드롭메뉴" id="basic-nav-dropdown">
+              <NavDropdown.Item><Link to="/cart">Cart</Link></NavDropdown.Item>
+              <NavDropdown.Item href="#action/3.2">
+                Another action
+              </NavDropdown.Item>
+              <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
+              <NavDropdown.Divider />
+              <NavDropdown.Item href="#action/3.4">
+                Separated link
+              </NavDropdown.Item>
+            </NavDropdown>
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
+
+    <Switch>
+      <Route exact path="/">
+      <div className="jumbotron">
+        <p className="jp">
+          <Button variant="primary">Learn more</Button>
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      </div>
+      
+      <div className="container" >
+        <div className="row">
+          {
+            shrit.map((a, i) => {
+              return  <Card shrit={shrit[i]} i={i} key={i} />
+            })
+          }
+        </div>
+      </div>
+      </Route>
+
+      <Route  path="/detail">
+        <Detail />
+      </Route>
+      <Route path="/cart">
+        <div>장바구니</div>
+      </Route>
+    </Switch>
     </div>
   );
 }
