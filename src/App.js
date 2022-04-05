@@ -17,7 +17,7 @@ function App(e) {
   return (
    
     <div className="App">
-   
+      <div className="container">
       <Navbar bg="light" expand="lg">
         <Navbar.Brand to="/">여성의류 쇼핑몰</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -54,11 +54,13 @@ function App(e) {
 
       <div className="container" >
         <div className="row">
-          {
-            shrit.map((a, i) => {
-              return  <Card shrit={shrit[i]} i={i} key={i} />
-            })
-          }
+          <div className="col">
+            {
+              shrit.map((a, i) => {
+                return  <Card shrit={shrit[i]} i={i} key={i} />
+              })
+            }
+          </div>
         </div>
       </div>
       </Route>
@@ -71,6 +73,7 @@ function App(e) {
         <div>장바구니</div>
       </Route>
     </Switch>
+    </div>
     </div>
   );
 }

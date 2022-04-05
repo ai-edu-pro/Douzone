@@ -5,9 +5,10 @@
 .jumbotron {
   background-repeat: no-repeat;
   background-image: url('./background.jpg');
+  /* background-position: center; */
   background-size: cover;
   overflow: hidden;
-  color: red;
+
 }
 /* .jumbotron img {
   max-width: 100%;
