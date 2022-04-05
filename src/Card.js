@@ -1,10 +1,9 @@
 import React from "react";
+import {Link} from 'react-router-dom';
 
 
 function Card(props) {
   // console.log('props.i = ' + props.i);
-
-  
 
   return (
     <div>
@@ -19,7 +18,6 @@ function Card(props) {
                    + `.jpg`
                 }
               />
-
 
             <h4 >{ props.shrit.title }</h4>
             <h6>{props.shrit.content}</h6>

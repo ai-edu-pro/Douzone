@@ -8,6 +8,7 @@ import Card from "./Card";
 
 import { Link, Route, Switch } from 'react-router-dom'
 import Detail from "./Detail";
+import Change from "./Change";
 
 function App(e) {
 
@@ -18,12 +19,12 @@ function App(e) {
     <div className="App">
    
       <Navbar bg="light" expand="lg">
-        <Navbar.Brand href="#home">여성의류 쇼핑몰</Navbar.Brand>
+        <Navbar.Brand to="/">여성의류 쇼핑몰</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             <Nav.Link as={Link}  to="/">Home</Nav.Link>
-            <Nav.Link as={Link} to="/detail">상세페이지</Nav.Link>
+            <Nav.Link as={Link} to="/detail/0">상세페이지</Nav.Link>
             <NavDropdown title="드롭메뉴" id="basic-nav-dropdown">
               <NavDropdown.Item><Link to="/cart">Cart</Link></NavDropdown.Item>
               <NavDropdown.Item href="#action/3.2">
@@ -47,6 +48,10 @@ function App(e) {
         </p>
       </div>
       
+     {/* <div>
+      <Change />
+     </div> */}
+
       <div className="container" >
         <div className="row">
           {
@@ -58,9 +63,10 @@ function App(e) {
       </div>
       </Route>
 
-      <Route  path="/detail">
-        <Detail />
+      <Route  path="/detail/:id">  
+        <Detail shrit={shrit}  />
       </Route>
+     
       <Route path="/cart">
         <div>장바구니</div>
       </Route>
