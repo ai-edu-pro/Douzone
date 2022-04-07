@@ -49,6 +49,17 @@ div.container {
     // color: red;
 }
 
+.tabfont{
+    font-size: 20px;
+    color: #f00;
+    text-align: left;
+}
 
-
+.tabcxt-enter {
+    opacity: 0;
+  }
+.tabcxt-enter-active {
+    opacity: 1;
+    transition: all 500ms;
+  }
 
