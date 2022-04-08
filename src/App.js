@@ -1,14 +1,24 @@
 /* eslint-disable */
 
-import { useState } from "react";
+import { useState , lazy, Suspense} from "react";
 import { Navbar, Nav, NavDropdown, Button } from "react-bootstrap";
 import "./App.css";
 import Data from "./data.js";
 import Card from "./Card";
+import MemoTest from "./MemoTest";
+
+
 
 import { Link, Route, Switch } from "react-router-dom";
-import Detail from "./Detail";
+// import Detail from "./Detail";
+// 해당 컴포넌트가 필요한 순간에 불려진다.
+// let Detail = lazy(()=>{ return import('/Detail.js')});
+let Detail = lazy(()=> import('./Detail.js') );
+
 import Cart from "./Cart";
+import { MemoryRouter } from "react-router-dom/cjs/react-router-dom.min";
+
+
 
 //1.
 // export let InventContext = React.createContext();
@@ -79,12 +89,19 @@ function App(e) {
           </Route>
 
           <Route path="/detail/:id">
-            <Detail shrit={shrit} />
+            <Suspense fallback={<div>로딩중이예요</div>}>
+             <Detail shrit={shrit} />
+            </Suspense>
           </Route>
 
           <Route path="/cart">
             <Cart />
           </Route>
+
+          <Route path="/memo">
+            <MemoTest />
+          </Route>
+
         </Switch>
       </div>
     </div>

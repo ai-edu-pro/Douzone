@@ -79,14 +79,14 @@ function Detail(props) {
               `.jpg`
             }
           />
-          <h4>{search.title}</h4>
+          <h4>{search.id}</h4>
           <p>{search.content}</p>
           <p>{search.price}원</p>
           {/* <Infomation invent={props.invent} setInvent={props.setInvent} /> */}
           <button
             className="btn btn-danger"
             onClick={()=>{
-              props.dispatch({type:'ADDITEM', payload: {id:2, name:'New이쁜옷', quan:4} });
+              props.dispatch({type:'ADDITEM', payload: {id:search.id, name:search.title, quan:1} });
               history.push('/cart');
             }}
           >주문하기

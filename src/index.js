@@ -14,13 +14,22 @@ let basicState = [
 ];
 
 function reducer(state=basicState, action){
-  let stateIndex = state.findIndex(
-      (item)=>{ return item.id === action.no});
+  let stateIndex = state.findIndex((item)=>{ return item.id === action.id});
 
   if(action.type === 'ADDITEM'){
-    let newState = [...state];
-    newState.push(action.payload);
-    return newState
+
+    // let searchIndex = state.find((item)=>{ return item.id === action.no});
+
+    if(stateIndex >= 0 ) {  // 찾은 데이터가 있다면 
+      let newState = [...state];
+      newState[stateIndex].quan++;  //수량만 증가
+      return newState
+    } else {
+      let newState = [...state];
+      newState.push(action.payload);
+      return newState
+    }
+    
 
   } else if(action.type === 'INCREASE') {
 
@@ -31,12 +40,13 @@ function reducer(state=basicState, action){
   } else if(action.type === 'DECREASE') {
     let newState = [...state];
    
-    if(newState[stateIndex].quan === 0 ) newState[stateIndex].quan= 0;
+    if(newState[stateIndex].quan < 0 ) newState[stateIndex].quan= 0;
     else  newState[stateIndex].quan--;
     
     return newState
 
   } else {
+
     return state
   }
 }
