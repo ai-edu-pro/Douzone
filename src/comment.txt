@@ -1,0 +1,157 @@
+>> 최근 본 상품 목록 보기 - UI는 과제임
+
+1. 개발자도구 > 애플리케이션 > 로컬스토리지
+2. 콘솔창에 명령 실행하기
+ sessionStorage 는 휘발성임. 브라우저 껏다가 켜면 사라진다.
+localStorage.setItem('데이터이름', '데이터');
+localStorage.getItem('데이터이름');
+localStorage.removeItem('데이터이름')
+ex) 
+localStorage.setItem('name', 'doyeon');
+localStorage.getItem('name');
+localStorage.removeItem('name')
+
+localStorage.setItem('obj', {name:'kang'} );
+localStorage.getItem('obj'); // [object object] 이건 제대로 나온것이 아님.
+
+localStorage.setItem('arr', '[1,2,3]');
+localStorage.getItem('arr');  // '1,2,3'  이것도 제대로 나온것이 아님. 일반 텍스트임
+
+localStorage에는 저장되는 데이터는 문자(텍스트) 또는 숫자만 저장됨
+이것을 해결하기 위해서는 배열과 객체를 제대로 저장하기 위해서는
+localStorage.setItem('obj', {name:'kang'});
+localStorage.getItem('obj');
+
+localStorage.setItem('obj', JSON.stringify({name:'kang'}) );
+var value = localStorage.getItem('obj');
+JSON.parse(value)
+또는  JSON.parse( localStorage.getItem('obj') ); 이렇게해서 값 꺼내온다.
+
+localStorage.setItem('arr', JSON.stringify([1,2,3]) ) ;
+JSON.parse(localStorage.getItem('arr'));
+
+>> Detatil.js 수정
+1. 누가 Detail.js 페이지에 들어가면 
+2. localStorage에 있는 데이터를 꺼냅니다. 없는 데이터 꺼내면 null 이 나옴
+3. 그럼 [0,1] 이런게 담긴 어레이가 나오겠죠.
+4. 그럼 거기에 현재 페이지에 있는 상품번호 (예를 들면 현재 URL에 있는거)를 push합니다.
+그럼 [0,1,1] 이런 식이 되겠죠. 
+5. 중복 숫자를 제거합니다. 구글찾아보셔도되고 Set 자료형 찾아보셔도 되겠습니다.
+6. 중복 제거된 [] 어레이를 다시 localStorage에 저장합니다. 
+
+
+  // 최근 본 상품 저장
+  useEffect(()=>{
+    var arr = localStorage.getItem('itemShow');
+    //1. arr = JSON.parse(arr)  실행했을때 에러 뜸 확인하고 2번으로 수정한다.
+    //2. if(arr == null ){    arr = [];  } else {  arr = JSON.parse(arr) }
+
+    // 파라미터 값 넣으면 됨. let { id } = useParams();
+    arr.push(id);
+    arr = new Set(arr);  // 중복 제거
+    arr = [...arr];
+
+    localStorage.setItem('itemShow', JSON.stringify(arr) );
+
+  }, []);
+
+>> 검색어 : js set list map mdn 기능은 자바와 같음. 
+----------------------------------------------
+
+>> Nodejs + Express 서버와 React 연동하기
+- nodejs : 서버 만드는 툴
+- react : html 파일 이쁘게 만들어주는 도구 (UI 작업)
+1. 새롭게 작업 폴더 만들기 : react-Express
+ 터미널> npm init
+  entry point: server.js  // 이부분이 시작점임
+  package.json 파일 열어서 확인하기
+ 터미널> npm install express  
+2. server.js 파일에 내용 기재한다.
+const express = require('express');
+const path = require('path');
+const app = express();
+
+const http = require('http').createServer(app);
+http.listen(8080, function () {
+  console.log('listening on 8080')
+}); 
+
+3. public 폴더 생성 > main.html 파일 만들기
+ <h4>안녕하세요. 메인 페이지 입니다.</h4>
+
+4.server.js 파일에 get() 요청한다
+app.get('/', function (request, response) {
+  response.sendFile(path.join(__dirname, 'public/main.html'));
+});
+이러면 에러 걸릴수 있다. 해서 윗줄에 app.use() 추가한다.
+
+4.      static  // html css js image 파일들 담긴 곳 명시 
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.get('/', function (request, response) {
+  response.sendFile(path.join(__dirname, 'public/main.html'));
+});
+
+5. 서버 리스타트 또는 노드몬으로 실행했으면 
+ http://localhost:8080/main.html  실행하기
+
+6.해당 경로에서 리액트 프로젝트 새로 생성하고 빌드하기
+ 터미널> npx create-react-app  react-app 
+
+7. 터미널> npm run build
+ build 폴더 생성 확인하고 server.js 파일 수정하기
+
+ app.use(express.static(path.join(__dirname, 'react-app/build')));  // 'react-app/build' 본인 리액트 프로젝트명
+ app.get('/', function (request, response) {
+     response.sendFile(path.join(__dirname, 'react-app/build/index.html')); // 리액트 시작페이지 'react-app/build/index.html'
+ });
+
+8.http://localhost:8080/index.html  브라우저에서 결과 확인
+
+9.routor 설치하고 구성해서 해보기 - index.js 파일 수정
+ import { BrowserRouter } from 'react-router-dom'
+
+ 
+ReactDOM.render(
+  <React.StrictMode>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </React.StrictMode>,
+  document.getElementById('root')
+);
+
+10.라우터 이용했을 경우 서버 구성하기
+ http://localhost:8080/about 이렇게 하면 서버에게 요청하는 것이기 때문에 열리지 않는다.
+ 해결 방법은 server.js 파일에 아래 코드 추가한다
+ // '*' 는 아무 문자가 들어와도 처리 해준다는것임.
+ app.get('*', function (request, response) {
+    response.sendFile(path.join(__dirname, 'react-app/build/index.html'));
+});
+
+11. / --> public/main.html ,  /react  --> 'react-app/build/index.html 로 이동하겠다하면
+
+ app.get('*', function (request, response) {
+    response.sendFile(path.join(__dirname, 'react-app/build/index.html'));
+});  주석처리하고 아래와 같이 변경한다.
+
+app.use('/', express.static(path.join(__dirname, 'public')));
+app.use('/react', express.static(path.join(__dirname, 'react-app/build')));
+
+app.get('/', function (request, response) {
+  response.sendFile(path.join(__dirname, 'public/main.html'));
+});
+
+app.get('/react', function (request, response) {
+    response.sendFile(path.join(__dirname, 'react-app/build/index.html'));
+});
+
+app.use는 미들웨어임
+
+12. http://localhost:8080/ 테스트하기 정상 실행됨
+13. http://localhost:8080/react  테스트하기 실행 안됨
+해결하기  react-app 프로젝트 폴더에 있는 package.json 파일 수정한다
+    "homepage": "/react",   추가하고 다시 실행한다.
+ 
+14. 터미널> npm run build 다시 하고 
+   브라우저에서 실행하고 확인하기.
